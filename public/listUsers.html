@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>用户列表页</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+
+<button id="getAllUsers">获取所有用户列表</button>
+<hr/>
+<input class="J-SearchUserId" type="text" placeholder="请输入待查询用户id" />
+<button id="getOneUserById">获取指定id的用户信息</button>
+<hr/>
+
+<input class="J-DeleteUserId" type="text" placeholder="请输入待查询用户id" />
+<button id="deleteOneUserById">删除指定id的用户信息</button>
+<hr/>
+
+
+
+<script type="text/javascript" src="framework/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#getAllUsers").click(function() {
+			$.get('/getAllUsers', function(data) {
+				console.log("--------------所有用户列表--------------");
+				console.log(data);
+			});
+		});
+
+		$("#getOneUserById").click(function() {
+			$.post('/getOneUserById', {userId: $(".J-SearchUserId").val()} , function(data){
+				console.log("----------id为"+$(".J-SearchUserId").val()+"的用户信息-----------");
+				console.log(data);
+			});
+		});
+
+		$("#deleteOneUserById").click(function() {
+			$.post('/deleteOneUserById', {userId: $(".J-DeleteUserId").val()} , function(data){
+				console.log("----------id为"+$(".J-DeleteUserId").val()+"的用户删除成功-----------");
+				console.log(data);
+			});
+		});
+
+		
+	});
+</script>
+</body>
+
+</html>
