@@ -1,9 +1,7 @@
 {
-  "name": "learnNode",
+  "name": "MeGa",
   "version": "0.0.1",
-  "description": "nodejs实战",
   "author":"Guoer",
-  "email":"1054609489@qq.com",
   "dependencies": {
     "body-parser": "^1.15.0",
     "cookie-parser": "^1.4.1",

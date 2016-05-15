@@ -1,0 +1,56 @@
+{% include "admin/common/header.phtml" %}
+<div class="row">
+    <div class="col-md-12">
+        
+        <form action="admin/callback/create" method="post" class="form-horizontal">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">创建公众号</h3>
+                <ul class="panel-controls">
+                    <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                </ul>
+            </div>
+            <div class="panel-body">
+                <p>请填写以下信息以完成公众号创建过程</p>
+            </div>
+            <div class="panel-body">                                                                        
+                <input type="hidden" name="<?php echo $this->security->getTokenKey() ?>" value="<?php echo $this->security->getToken() ?>"/>
+                <div class="form-group">
+                    <label class="col-md-3 col-xs-12 control-label">公众号名称</label>
+                    <div class="col-md-6 col-xs-12">                                            
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                            <input name="title" type="text" class="form-control">
+                        </div>                                            
+                    </div>
+                </div>
+                
+                <div class="form-group">                                        
+                    <label class="col-md-3 col-xs-12 control-label">Token值</label>
+                    <div class="col-md-6 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-unlock-alt"></span></span>
+                            <input name="token" value="{{token}}" type="text" class="form-control">
+                        </div>            
+                    </div>
+                </div>
+
+                <div class="form-group">                                        
+                    <label class="col-md-3 col-xs-12 control-label">每日目标增长数</label>
+                    <div class="col-md-6 col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="fa fa-check-circle"></span></span>
+                            <input name="target" type="text" class="form-control">
+                        </div>            
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">                                  
+                <button class="btn btn-primary pull-right">提交</button>
+            </div>
+        </div>
+        </form>
+        
+    </div>
+</div>
+{% include "admin/common/footer.phtml" %}

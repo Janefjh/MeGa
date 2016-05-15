@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>首页</title>
+    <meta charset="UTF-8"/>
+</head>
+
+<body>
+<div class="form">
+    Name:<input type="text" class="userName" placeholder="请填写您的用户名"/><br/>
+    Email:<input type="email" class="userEmail" placeholder="请输入您的邮箱"/><br/>
+    Password:<input type="password" class="userPsd" placeholder="请输入您的密码"><br/>
+    <input class="J-submit" type="button" value="提交"/>
+</div>
+
+
+<script type="text/javascript" src="framework/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(".J-submit").click(function() {
+			var userInfo = {
+				userName : $('.userName').val(),
+				userEmail : $(".userEmail").val(),
+				userPsd : $('.userPsd').val()
+			};
+			$.post('/user', userInfo, function(data) {
+				console.log(data);
+			});
+
+		});
+	});
+</script>
+</body>
+
+</html>
