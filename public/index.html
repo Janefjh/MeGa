@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>        
-        <title>MeGa后台管理系统</title>            
+        <title>MeGa</title>            
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -34,7 +34,6 @@
                             </div>
                         </div>                                                                        
                     </li>
-                    <li class="xn-title">导航</li>
                     <li class="active">
                         <a href="/index"><span class="fa fa-desktop"></span> <span class="xn-text">首页</span></a>                        
                     </li>                    
@@ -82,8 +81,7 @@
 
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
-                    <li><a href="#">首页</a></li>                    
-                    <li class="active">控制台</li>
+                    <li class="active"><a href="#">首页</a></li>                    
                 </ul>
                 <!-- END BREADCRUMB -->                       
                 
@@ -91,7 +89,7 @@
                 <div class="page-content-wrap">
                     <div class="row">
                         <div class="col-md-3">
-                            <button class="btn btn-primary" id="signup">注册</button>
+                            <button class="btn btn-primary" id="insertData">插入一条记录</button>
                         </div>
                     </div>
                 </div>
@@ -145,7 +143,7 @@
 
         <script type="text/javascript">
             $(document).ready(function(){
-                $("#signup").click(function(){
+                $("#insertData").click(function(){
                     $.post('/signup', {
                         'name': 'John Chen',
                         'email': '10546094@qq.com',
