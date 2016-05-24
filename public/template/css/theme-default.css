@@ -1511,6 +1511,10 @@ a.list-group-item:focus {
 .list-group-status.status-offline:after {
   background: #CCC;
 }
+
+.list-group-status.status-danger:after {
+  background: #af4342;
+}
 /* END LIST GROUP CONTACTS */
 /* EOF LIST GROUP */
 /* FRIENDS */

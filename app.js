@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var cookieParser = require('cookie-parser');
 
-var router = require('./lib/router.js');
+var router = require('./backend/router.js');
 
 var app = express();
 app.use(express.static('public'));
