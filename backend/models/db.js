@@ -1,36 +1,25 @@
 var assert = require('assert');
 var MongoClient = require('mongodb').MongoClient;
-
 var url = 'mongodb://localhost:27017/MeGa';
 
-/**
- * [定义数据库构造器]
- */
-function Database() {
-	"use strict";
-
-}
+function Database() {}
 /**
  * [插入一条记录(注意: 若集合不存在，mongodb会先自动创建集合，再执行插入操作)]
  * @param  {String}   param_collection [待插入记录所在集合的名称]
  * @param  {Object}   param_document [待插入的记录内容]
- * @param  {Function} callback [插入成功的回调函数。]
+ * @param  {Function} callback [插入成功的回调函数]
  */
 Database.prototype.insertOneDocument = function(param_collection, param_document, callback) {
 	"use strict";
 	var insertOneDoc = function(db, cb) {
 		var collection = db.collection(param_collection);
-		// 插入一条记录
 		collection.insertOne(param_document, function(err, result) {
 			assert.equal(err, null);
-			console.log("> 成功向集合" + param_collection + "中插入了1条记录.");
 			callback(result);
 		});
 	};
-
 	MongoClient.connect(url, function(err, db) {
 		assert.equal(null, err);
-		console.log("> 数据库连接成功...");
 		insertOneDoc(db, function() {
 			db.close();
 		});
@@ -38,27 +27,50 @@ Database.prototype.insertOneDocument = function(param_collection, param_document
 };
 
 /**
- * [插入多条记录]
- * @param  {String}   param_collection [待插入记录的集合名称]
- * @param  {Array}    param_documents  [待插入的记录内容]
- * @param  {Function} callback [插入成功的回调函数]
+ * [根据_id删除一条记录]
+ * @param  {String}   param_collection [待删除记录所在集合的名称]
+ * @param  {Object}   param_filter     [删除过滤条件]
+ * @param  {Function} callback         [删除成功的回调函数]
  */
-Database.prototype.insertManyDocuments = function(param_collection, param_documents, callback) {
+Database.prototype.deleteOneDocument = function(param_collection, param_filter, callback){
 	"use strict";
-	var insertManyDocs = function(db, cb) {
+	var deleteOneDoc = function(db, cb){
 		var collection = db.collection(param_collection);
-		// 插入多条记录
-		collection.insertMany(param_documents, function(err, result) {
+		console.log(param_filter);
+		collection.deleteOne(param_filter, function(err, result){
 			assert.equal(err, null);
-			console.log("> 成功向集合" + param_collection + "中插入了" + param_documents.length + "条记录.");
 			callback(result);
 		});
 	};
-
-	MongoClient.connect(url, function(err, db) {
+	MongoClient.connect(url, function(err, db){
 		assert.equal(null, err);
-		console.log("> 数据库连接成功...");
-		insertManyDocs(db, function() {
+		deleteOneDoc(db, function(){
+			db.close();
+		});
+	});
+};
+
+/**
+ * [按条件修改某条记录]
+ * @param  {String}   param_collection [待修改记录所在集合]
+ * @param  {Object}   param_filter     [修改过滤条件]
+ * @param  {Object}   param_updateDoc [修改后的记录]
+ * @param  {Function} callback         [修改成功的回调函数]
+ */
+Database.prototype.updateOneDocument = function(param_collection, param_filter, param_updateDoc, callback){
+	"use strict";
+	var updateOneDoc = function(db, cb) {
+		var collection = db.collection(param_collection);
+		collection.updateOne(param_filter, {$set: param_updateDoc}, function(err, result) {
+			assert.equal(err, null);
+			
+			assert.equal(1, result.result.n);
+			callback(result);
+		});
+	};
+	MongoClient.connect(url, function(err, db){
+		assert.equal(null, err);
+		updateOneDoc(db, function(){
 			db.close();
 		});
 	});
@@ -74,36 +86,13 @@ Database.prototype.findAllDocuments = function(param_collection, callback) {
 	var findAllDocs = function(db, cb) {
 		var collection = db.collection(param_collection);
 		// 获取find()方法返回的记录对象
-		var result = collection.find();
-		callback(result);
-	};
-
-	MongoClient.connect(url, function(err, db) {
-		assert.equal(null, err);
-		console.log("> 数据库连接成功...");
-		findAllDocs(db, function() {
-			db.close();
+		collection.find({}).toArray(function(err, docs){
+			callback(docs);
 		});
-	});
-};
-
-/**
- * [查询一个集合中的所有记录, 并按照指定条件排序]
- * @param  {String}   param_collection [待查询集合名称]
- * @param  {Object}   param_condition [排序条件]
- * @param  {Function} callback [查询成功的回调函数]
- */
-Database.prototype.findSortAllDocuments = function(param_collection, param_condition, callback){
-	"use strict";
-	var findSortAllDocs = function(db, cb) {
-		var collection = db.collection(param_collection);
-		var result = collection.find().sort(param_condition);
-		callback(result);
 	};
 	MongoClient.connect(url, function(err, db) {
 		assert.equal(null, err);
-		console.log("> 数据库连接成功...");
-		findSortAllDocs(db, function() {
+		findAllDocs(db, function() {
 			db.close();
 		});
 	});
@@ -119,41 +108,16 @@ Database.prototype.findDocumentsByFilter = function(param_collection, param_filt
 	"use strict";
 	var findDocsByFilter = function(db, cb){
 		var collection = db.collection(param_collection);
-		var result = collection.find(param_filter);
-		callback(result);
+		collection.find(param_filter).toArray(function(err, docs){
+			callback(docs);
+		});
 	};
 	MongoClient.connect(url, function(err, db) {
 		assert.equal(null, err);
-		console.log("> 数据库连接成功...");
 		findDocsByFilter(db, function() {
 			db.close();
 		});
 	});
 };
-
-/**
- * [按条件查询集合中的记录, 并按照指定条件排序]
- * @param  {String}   param_collection [待查询集合名称]
- * @param  {Object}   param_condition  [排序条件]
- * @param  {Object}   param_filter	 [查询过滤条件]
- * @param  {Function} callback [查询成功的回调函数]
- */
-Database.prototype.findSortDocumentsByFilter = function(param_collection, param_condition, param_filter, callback){
-	"use strict";
-	var findSortDocsByFilter = function(db, cb){
-		var collection = db.collection(param_collection);
-		var result = collection.find(param_filter).sort(param_condition);
-		callback(result);
-	};
-	MongoClient.connect(url, function(err, db) {
-		assert.equal(null, err);
-		console.log("> 数据库连接成功...");
-		findSortDocsByFilter(db, function() {
-			db.close();
-		});
-	});
-};
-
-
 
 module.exports = Database;

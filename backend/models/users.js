@@ -1,22 +1,23 @@
 var Database = require('./db.js');
 
-/**
- * [Users构造器]
- */
 function Users() {
+	this.enterpriseName = '';
+	this.userName = '';
+	this.email = '';
+	this.password = '';
 }
 
-/**
- * [注册新用户]
- */
-Users.prototype.signup = function(param_document, callback) {
+// 注册
+Users.prototype.regist = function(callback) {
 	var db = new Database();
-	db.insertOneDocument('users', param_document, callback);
+	db.findAllDocuments("users",function(data){
+		callback(data);
+	});
+
+	// db.insertOneDocument("users", param_document, callback);
 };
 
-/**
- * [用户登录]
- */
+// 登录
 Users.prototype.login = function(){
 
 };

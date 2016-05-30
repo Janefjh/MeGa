@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" class="body-full-height" ng-app="myApp" >
+    <head>        
+        <title>登录 (企业版)</title>            
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" type="text/css" id="theme" href="/template/css/theme-default.css"/>
+    </head>
+    <body>
+         <div class="login-container" ng-controller="loginController">
+            <div class="login-box animated fadeInDown">
+                <!-- <div class="login-logo"></div> -->
+                <div class="login-body">
+                    <div class="login-title">MeGa后台管理系统 (企业版)</div>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input ng-model="userForm.userName" type="text" class="form-control" placeholder="请输入用户名"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input ng-model="userForm.password" type="password" class="form-control" placeholder="请输入密码"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <button class="btn btn-info btn-block" ng-click="submit()">登录</button>
+                            </div>
+                        </div>
+                        <div class="login-subtitle">
+                            还没有账号? <a href="/regist">立即注册一个</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="login-footer">
+                    <div class="pull-left">
+                        &copy; 2016 MeGa
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/lib/angular.min.js"></script>
+        <script type="text/javascript" src="/app/app.js"></script>
+        <script type="text/javascript" src="/app/servers.js"></script>
+        <script type="text/javascript" src="/app/controllers/signController.js"></script>
+    </body>
+</html>
+
+
+
+
+
+
