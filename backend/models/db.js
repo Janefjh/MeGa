@@ -63,7 +63,6 @@ Database.prototype.updateOneDocument = function(param_collection, param_filter, 
 		var collection = db.collection(param_collection);
 		collection.updateOne(param_filter, {$set: param_updateDoc}, function(err, result) {
 			assert.equal(err, null);
-			
 			assert.equal(1, result.result.n);
 			callback(result);
 		});
@@ -85,7 +84,6 @@ Database.prototype.findAllDocuments = function(param_collection, callback) {
 	"use strict";
 	var findAllDocs = function(db, cb) {
 		var collection = db.collection(param_collection);
-		// 获取find()方法返回的记录对象
 		collection.find({}).toArray(function(err, docs){
 			callback(docs);
 		});
