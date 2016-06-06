@@ -2,7 +2,7 @@
   "name": "MeGa",
   "version": "0.0.1",
   "author":"Guoer",
-  "description": "A private project used nodejs + express + mongodb + angularjs",
+  "description": "个人爱好",
   "dependencies": {
     "body-parser": "^1.15.0",
     "cookie-parser": "^1.4.1",
