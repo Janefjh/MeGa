@@ -112,10 +112,32 @@ module.exports = function(app, baseURL) {
         res.end();
     });
 
-    app.get('/getTest', function(req, res) {
-        console.log("> ajax get请求.".green);
-        console.log(req.query);
-        res.json(req.query);
+    app.get('/vueGet', function(req, res) {
+        console.log("> Vue GET请求.".green);
+        
+        res.json({
+            "status": 1,
+            "statusCode":200,
+            "data":[{
+                'id':1,
+                'bookName':"《平凡的世界》",
+                'author':"路遥"
+            },{
+                'id':2,
+                'bookName':"《沉默的大多数》",
+                'author':"王小波"
+            },{
+                'id':3,
+                'bookName':"《黄金时代》",
+                'author':"王小波"
+            }]
+        });
+        res.end();
+    });
+     app.post('/vuePost', function(req, res) {
+        console.log("> Vue POST请求.".green);
+        console.log(req.body);
+        res.json(req.body);
         res.end();
     });
 

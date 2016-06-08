@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="myApp">
+<html lang="en">
     <head>        
         <title>产品列表</title>            
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" type="text/css" id="theme" href="/template/css/theme-default.css"/>             
     </head>
-    <body ng-controller="ProductListController">
+    <body id="myApp">
         <!-- START PAGE CONTAINER -->
         <div class="page-container">
            <!-- START 页面侧边栏 -->
@@ -109,16 +109,69 @@
                 <!-- PAGE CONTENT WRAPPER -->
                 <div class="page-content-wrap">
                     <div class="row">
-                        <div class="col-md-12">
-                            <button class="btn btn-success" ng-click="sendGet()">sendGet</button>
-                            <button class="btn btn-info" ng-click="sendQuery()">sendQuery</button>
-                            <button class="btn btn-primary" ng-click="sendSave()">sendPost</button>             
+                       <div class="col-md-12">
+                            <div class="panel panel-default">
+
+                                <div class="panel-heading">
+                                    <div class="col-md-2 col-xs-5 pull-left">
+                                        <select class="form-control select">
+                                            <option value="" disabled selected>每页显示条数</option>
+                                            <option value="5">5</option>
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="40">40</option>
+                                            <option value="10000">所有</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 col-xs-5 pull-right">
+                                      <input type="text" class="form-control" placeholder="搜索产品名称...">
+                                    </div>
+                                </div>
+
+                                <div class="panel-body panel-body-table">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped table-actions">
+                                            <thead>
+                                                <tr>
+                                                    <th>No.</th>
+                                                    <th>产品名称</th>
+                                                    <th  width="200">产品介绍</th>
+                                                    <th>审核状态</th>
+                                                    <th>被喜欢数</th>
+                                                    <th>产品标签</th>
+                                                    
+                                                </tr>
+                                            </thead>
+                                            <tbody>                                            
+                                                <tr v-for="product in productList">
+                                                    <td v-text="{{$index + 1}}"></td>
+                                                    <td v-text="{{product.name}}"></td>
+                                                    <td v-text="{{product.detail}}"></td>
+                                                    <td>
+                                                        <span class="label label-success" v-if="product.auditStatus == 1">已通过</span>
+                                                        <span class="label label-danger" v-else>未通过</span>
+                                                    </td>
+                                                    <td ng-bind="product.like"></td>
+                                                    <td>                                                                  
+                                                        <a href="#">
+                                                            <span class="fa fa-tag"></span><span v-text="product.tag"></span>
+                                                        </a>
+                                                    </td>
+                                                    
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>                                
+
+                                </div>
+                                <div class="panel-footer">
+                                    <ul class="pagination pagination-sm pull-right">
+                                        <li class="disabled"><a href="#">上一页</a></li>
+                                        <li><a href="#">下一页</a></li>
+                                    </ul>
+                                </div>
+                            </div>                                                
                         </div>
-                        <div class="col-md-12">
-                             <ul ng-repeat="product in productListObj">
-                                 <li ng-repeat="(key, value) in product">{{key}}:{{value}}</li>
-                             </ul>
-                         </div> 
                     </div>
                 </div>
                 <!-- END PAGE CONTENT WRAPPER -->                                
@@ -163,19 +216,73 @@
         <script type="text/javascript" src="/template/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
         <script type="text/javascript" src="/template/js/plugins/owl/owl.carousel.min.js"></script>     
         <!-- END THIS PAGE PLUGINS-->        
-        <script type="text/javascript" src="/template/js/plugins/bootstrap/bootstrap-select.js"></script>
-        <script type="text/javascript" src="/template/js/plugins/tagsinput/jquery.tagsinput.min.js"></script>
 
         <!-- START TEMPLATE -->
         <script type="text/javascript" src="/template/js/plugins.js"></script>        
         <script type="text/javascript" src="/template/js/actions.js"></script>
         <!-- END TEMPLATE -->
 
-        <!--START angularjs -->
-        <script type="text/javascript" src="/lib/angular.min.js"></script>
-        <script type="text/javascript" src="/lib/angular-resource.min.js"></script>
-        <script type="text/javascript" src="/app/resourceTest.js"></script>
-    <!-- END SCRIPTS -->    
+        <!--START vuejs -->
+        <script type="text/javascript" src="/lib/vue.js"></script>
+        <script type="text/javascript" src="/lib/vue-resource.js"></script>
+
+        <script type="text/javascript">
+            Vue.http.options.emulateJSON = true;
+           
+            var app = new Vue({
+                el: '#myApp',
+                data: {
+                    postData:  {
+                        'id':1,
+                        'bookName':"《平凡的世界》",
+                        'author':"路遥"
+                    },
+                    productList: []
+                },
+                methods: {
+                    //编辑产品
+                    edit: function(productItem){
+
+                    },
+                    //删除产品
+                    delete: function(productName){
+
+                    }
+                },
+                computed: {
+                    
+                },
+                ready: function() {
+                    // GET request
+                    this.$http({
+                        url: '/vueGet', 
+                        method: 'GET'
+                    }).then(function (response) {
+                        // success callback
+                        this.$set('books', response.data.data);
+                        console.log(this.books);
+
+                    }, function (response) {
+                        // error callback
+                        console.log(response);
+                    });
+
+                    //POST request
+                    this.$http({
+                        url: '/vuePost',
+                        method: 'POST', 
+                        data: this.postData
+                    }).then(function(response){
+                        // success callback
+                        console.log(response.data);
+                    }, function(response){
+                        // error callback
+                        console.log(response);
+                    });
+                }
+            });
+        </script>
+        <!-- END SCRIPTS -->    
     </body>
 </html>
 
