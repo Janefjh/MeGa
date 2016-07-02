@@ -135,6 +135,7 @@
                                                 <tr>
                                                     <th>No.</th>
                                                     <th>产品名称</th>
+                                                    <th>所属品牌</th>
                                                     <th  width="200">产品介绍</th>
                                                     <th>审核状态</th>
                                                     <th>被喜欢数</th>
@@ -145,17 +146,22 @@
                                             <tbody>                                            
                                                 <tr v-for="product in productList">
                                                     <td v-text="$index + 1"></td>
-                                                    <td v-text="product.name"></td>
-                                                    <td v-text="product.detail"></td>
+                                                    <td v-text="product.productName"></td>
+                                                    <td v-text="product.brandName"></td>
+                                                    <td v-text="product.productDetail"></td>
                                                     <td>
                                                         <span class="label label-success" v-if="product.auditStatus == 1">已通过</span>
                                                         <span class="label label-danger" v-else>未通过</span>
                                                     </td>
-                                                    <td ng-bind="product.like"></td>
-                                                    <td>                                                                  
-                                                        <a href="#">
-                                                            <span class="fa fa-tag"></span><span v-text="product.tag"></span>
-                                                        </a>
+                                                    <td v-text="product.like"></td>
+                                                    <td> 
+                                                        <ul class="list-tags">
+                                                            <li v-for="tag in product.productTags">
+                                                                <a href="#">
+                                                                     <span class="fa fa-tag"></span><span v-text="tag"></span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
                                                     </td>
                                                     
                                                 </tr>
@@ -204,22 +210,27 @@
         <audio id="audio-fail" src="/template/audio/fail.mp3" preload="auto"></audio>
         <!-- END PRELOADS -->                  
         
-        <!-- START SCRIPTS -->
-        <!-- START PLUGINS -->
+      <!-- START PLUGINS -->
         <script type="text/javascript" src="/template/js/plugins/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="/template/js/plugins/jquery/jquery-ui.min.js"></script>
         <script type="text/javascript" src="/template/js/plugins/bootstrap/bootstrap.min.js"></script>        
         <!-- END PLUGINS -->
 
-        <!-- START THIS PAGE PLUGINS-->        
-        <script type="text/javascript" src="/template/js/plugins/icheck/icheck.min.js"></script>        
+        <!-- THIS PAGE PLUGINS -->
+        <script type='text/javascript' src='/template/js/plugins/icheck/icheck.min.js'></script>
         <script type="text/javascript" src="/template/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
-        <script type="text/javascript" src="/template/js/plugins/owl/owl.carousel.min.js"></script>     
-        <!-- END THIS PAGE PLUGINS-->        
-
-        <!-- START TEMPLATE -->
+        <script type="text/javascript" src="/template/js/plugins/owl/owl.carousel.min.js"></script> 
+        <script type="text/javascript" src="/template/js/plugins/bootstrap/bootstrap-select.js"></script>
+        
+        <script type='text/javascript' src='/template/js/plugins/noty/jquery.noty.js'></script>
+        <script type='text/javascript' src='/template/js/plugins/noty/layouts/topRight.js'></script>            
+        <script type='text/javascript' src='/template/js/plugins/noty/themes/default.js'></script>
+        <!-- END PAGE PLUGINS -->
+        <script type="text/javascript" src="/plugins/jquery-file-upload/jquery.iframe-transport.js"></script>
+        <script type="text/javascript" src="/plugins/jquery-file-upload/jquery.fileupload.js"></script>
+        <!-- START TEMPLATE -->        
         <script type="text/javascript" src="/template/js/plugins.js"></script>        
-        <script type="text/javascript" src="/template/js/actions.js"></script>
+        <script type="text/javascript" src="/template/js/actions.js"></script>        
         <!-- END TEMPLATE -->
 
         <!--START vuejs -->
@@ -232,11 +243,7 @@
             var app = new Vue({
                 el: '#myApp',
                 data: {
-                    postData:  {
-                        'id':1,
-                        'bookName':"《平凡的世界》",
-                        'author':"路遥"
-                    },
+                    userName: "Guoer",
                     productList: []
                 },
                 methods: {
@@ -253,29 +260,18 @@
                     
                 },
                 ready: function() {
-                    // GET request
                     this.$http({
-                        url: '/vueGet', 
-                        method: 'GET'
+                        url: '/getProductList', 
+                        method: 'POST',
+                        data: {
+                            "userName": this.userName
+                        }
                     }).then(function (response) {
                         // success callback
-                        this.$set('books', response.data.data);
-                        console.log(this.books);
+                        this.$set('productList', response.data.data);
+                        console.log(this.productList);
 
                     }, function (response) {
-                        // error callback
-                        console.log(response);
-                    });
-
-                    //POST request
-                    this.$http({
-                        url: '/vuePost',
-                        method: 'POST', 
-                        data: this.postData
-                    }).then(function(response){
-                        // success callback
-                        console.log(response.data);
-                    }, function(response){
                         // error callback
                         console.log(response);
                     });

@@ -3,10 +3,14 @@ var Brands = require('./models/brands.js');
 var colors = require('colors');
 
 module.exports = function(app, baseURL) {
-    /********** 页面渲染接口 ***********/
-    app.get('/', function(req, res) {
-        res.cookie('MeGaUserName', 'Guoer');
-        res.sendFile(baseURL + '/public/views/index.html');
+    /********** 页面请求接口 ***********/
+    app.get('/index', function(req, res) {
+        var signedUserName = req.cookies.MeGaUserName; 
+        if(typeof signedUserName != 'undefined'){   // 如果cookie中有权限，则直接进入首页
+            res.sendFile(baseURL + '/public/views/index.html');
+        }else{
+            res.redirect('/login'); // 如果cookie中没有权限，则重定向到登录页面
+        }
     });
     app.get('/login', function(req, res) {
         res.sendFile(baseURL + '/public/views/login.html');
@@ -31,6 +35,56 @@ module.exports = function(app, baseURL) {
     });
 
     /********** AJAX请求处理接口 **********/
+    app.post('/login', function(req, res) {
+        console.log("> 登录请求...".green);
+
+        var user = new Users();
+        user.login(req.body, function(message){
+            // 成功
+            console.log(message.blue);
+            res.cookie('MeGaUserName', req.body.userName, {maxAge: 60000, httpOnly: true});
+            res.json({
+                "status": 200,
+                "cookie": req.body.userName,
+                "message": message
+            });
+            res.end();
+        }, function(message){
+            // 失败
+            console.log(message.red);
+            res.json({
+                "status": 202,
+                "message": message
+            });
+            res.end();
+        });
+    });
+
+    app.post('/regist', function(req, res) {
+        console.log("> 注册请求...".green);
+
+        var user = new Users();
+        user.regist(req.body, function(message){
+            // 成功
+            console.log(message.blue);
+            res.cookie('MeGaUserName', req.body.userName, {maxAge: 60000, httpOnly: true});
+            res.json({
+                "status": 200,
+                "cookie": req.body.userName,
+                "message": message
+            });
+            res.end();
+        }, function(message){
+            // 失败
+            console.log(message.red);
+            res.json({
+                "status": 202,
+                "message": message
+            });
+            res.end();
+        });
+    });
+
     app.post('/getBrandList', function(req, res) {
         var brand = new Brands();
         brand.getBrandList(req.body.userName, function(data){
@@ -96,49 +150,32 @@ module.exports = function(app, baseURL) {
         });
     });
 
-    app.post('/regist', function(req, res) {
-        console.log("> 用户注册ajax请求.".green);
+    app.post('/getProductList', function(req, res) {
+        console.log("> 获取产品列表post请求.".green);
+        console.log(req.body.userName);
 
-        var user = new Users();
-        user.regist(function(data){
-            console.log(data);
-            res.json(data);
-            res.end();
-        });
-    });
-
-    app.post('/login', function(req, res) {
-        console.log("> 登录ajax请求.".green);
-        res.end();
-    });
-
-    app.get('/vueGet', function(req, res) {
-        console.log("> Vue GET请求.".green);
-        
+        var productList = [{
+            "userName": 'Guoer',
+            "brandName": '科颜氏 Kiehl’s',
+            "productName": '科颜氏高保湿面霜',
+            "productDetail": '高保湿面霜高保湿面霜高保湿面霜...',
+            "auditStatus": '1',
+            "like": '0', 
+            "productTags": ["保湿", "护肤"]
+        },{
+            "userName": 'Guoer',
+            "brandName": '兰蔻 Lancome',
+            "productName": '兰蔻小瓶',
+            "productDetail": '小瓶小瓶小瓶小瓶小瓶...',
+            "auditStatus": '0',
+            "like": '0', 
+            "productTags": ["美白", "护肤"]
+        }];
         res.json({
             "status": 1,
             "statusCode":200,
-            "data":[{
-                'id':1,
-                'bookName':"《平凡的世界》",
-                'author':"路遥"
-            },{
-                'id':2,
-                'bookName':"《沉默的大多数》",
-                'author':"王小波"
-            },{
-                'id':3,
-                'bookName':"《黄金时代》",
-                'author':"王小波"
-            }]
+            "data": productList
         });
         res.end();
     });
-     app.post('/vuePost', function(req, res) {
-        console.log("> Vue POST请求.".green);
-        console.log(req.body);
-        res.json(req.body);
-        res.end();
-    });
-
 };

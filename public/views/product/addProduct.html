@@ -108,10 +108,55 @@
                 <!-- END BREADCRUMB -->                       
                 
                 <!-- PAGE CONTENT WRAPPER -->
-                <div class="page-content-wrap">
+                 <div class="page-content-wrap">
                     <div class="row">
                         <div class="col-md-12">
-                                      
+                            <div class="form-horizontal">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3>添加产品</h3>
+                                    </div>
+                                    <div class="panel-body"> 
+                                        <div class="form-group">
+                                            <label class="col-md-3 col-xs-12 control-label">产品名称:</label>
+                                            <div class="col-md-6 col-xs-12">       
+                                                <input ng-model="brandInfo.brandName" type="text" class="form-control" placeholder="请输入品牌名称" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 col-xs-12 control-label">品牌logo:</label>
+                                            <div class="col-md-6 col-xs-12">  
+                                                <input id="fileupload" type="file" name="files[]" data-url="/upload" value="上传图片" /> 
+                                              
+                                                <img ng-src="{{brandInfo.brandLogo}}" width="100%" />
+                                                        
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="col-md-3 col-xs-12 control-label">品牌介绍:</label>
+                                            <div class="col-md-6 col-xs-12">
+                                                <textarea ng-model="brandInfo.brandDetail" class="form-control" rows="5" placeholder="请输入品牌介绍(换成富文本编辑器)"></textarea> 
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="col-md-3 col-xs-12 control-label">产品定位:</label>
+                                            <div class="col-md-6 col-xs-12">  
+                                                <label class="check"  ng-repeat="tagName in productTagList">
+                                                <input value="{{tagName}}" ng-checked="brandInfo.productTag.indexOf(tagName) > -1" ng-click="toggleSelection(tagName)" type="checkbox" />{{tagName}}</label>
+                                            </div>
+                                        </div>
+
+                                         <div class="form-group">
+                                            <div class="col-md-6 col-md-offset-3 col-xs-12">                                        
+                                                <button class="btn btn-default" ng-click="submit()">提交</button>
+                                                <button class="btn btn-danger" ng-click="clear()">清空</button> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                    
                         </div>
                     </div>
                 </div>

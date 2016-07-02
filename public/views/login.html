@@ -12,7 +12,7 @@
             <div class="login-box animated fadeInDown">
                 <!-- <div class="login-logo"></div> -->
                 <div class="login-body">
-                    <div class="login-title">MeGa后台管理系统 (企业版)</div>
+                    <div class="login-title">MeGa后台管理系统</div>
                     <div class="form-horizontal">
                         <div class="form-group">
                             <div class="col-md-12">
@@ -24,6 +24,13 @@
                                 <input ng-model="userForm.password" type="password" class="form-control" placeholder="请输入密码"/>
                             </div>
                         </div>
+
+                        <div class="form-group"  ng-if="errMsg">
+                            <div class="col-md-12">
+                                <p style="color:#fff;" ng-bind="errMsg"></p>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-md-12">
                                 <button class="btn btn-info btn-block" ng-click="submit()">登录</button>
