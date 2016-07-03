@@ -4,9 +4,10 @@ var colors = require('colors');
 
 module.exports = function(app, baseURL) {
     /********** 页面请求接口 ***********/
-    app.get('/index', function(req, res) {
-        var signedUserName = req.cookies.MeGaUserName; 
+    app.get('/', function(req, res) {
+        var signedUserName = req.cookies.BookerCookie; 
         if(typeof signedUserName != 'undefined'){   // 如果cookie中有权限，则直接进入首页
+            console.log('> Cookie: '+ signedUserName);
             res.sendFile(baseURL + '/public/views/index.html');
         }else{
             res.redirect('/login'); // 如果cookie中没有权限，则重定向到登录页面
@@ -20,29 +21,21 @@ module.exports = function(app, baseURL) {
     });
     // 品牌相关页面
     app.get('/brandList', function(req, res) {
-        console.log('Cookies: ', req.cookies.MeGaUserName);
         res.sendFile(baseURL + '/public/views/brand/brandList.html');
     });
     app.get('/addBrand', function(req, res) {
         res.sendFile(baseURL + '/public/views/brand/addBrand.html');
     });
-    // 产品相关页面
-    app.get('/productList', function(req, res) {
-        res.sendFile(baseURL + '/public/views/product/productList.html');
-    });
-    app.get('/addProduct', function(req, res) {
-        res.sendFile(baseURL + '/public/views/product/addProduct.html');
-    });
 
     /********** AJAX请求处理接口 **********/
     app.post('/login', function(req, res) {
-        console.log("> 登录请求...".green);
+        console.log("@ 登录请求...".cyan);
 
         var user = new Users();
         user.login(req.body, function(message){
             // 成功
-            console.log(message.blue);
-            res.cookie('MeGaUserName', req.body.userName, {maxAge: 60000, httpOnly: true});
+            console.log(("> " + message).green);
+            res.cookie('BookerCookie', req.body.userName, {maxAge: 60000, httpOnly: true});
             res.json({
                 "status": 200,
                 "cookie": req.body.userName,
@@ -51,7 +44,7 @@ module.exports = function(app, baseURL) {
             res.end();
         }, function(message){
             // 失败
-            console.log(message.red);
+            console.log(("> " + message).red);
             res.json({
                 "status": 202,
                 "message": message
@@ -61,13 +54,13 @@ module.exports = function(app, baseURL) {
     });
 
     app.post('/regist', function(req, res) {
-        console.log("> 注册请求...".green);
+        console.log("@ 注册请求...".cyan);
 
         var user = new Users();
         user.regist(req.body, function(message){
             // 成功
-            console.log(message.blue);
-            res.cookie('MeGaUserName', req.body.userName, {maxAge: 60000, httpOnly: true});
+            console.log(("> "+message).green);
+            res.cookie('BookerCookie', req.body.userName, {maxAge: 60000, httpOnly: true});
             res.json({
                 "status": 200,
                 "cookie": req.body.userName,
@@ -76,7 +69,7 @@ module.exports = function(app, baseURL) {
             res.end();
         }, function(message){
             // 失败
-            console.log(message.red);
+            console.log(("> " + message).red);
             res.json({
                 "status": 202,
                 "message": message
@@ -148,34 +141,5 @@ module.exports = function(app, baseURL) {
             }
             res.end();
         });
-    });
-
-    app.post('/getProductList', function(req, res) {
-        console.log("> 获取产品列表post请求.".green);
-        console.log(req.body.userName);
-
-        var productList = [{
-            "userName": 'Guoer',
-            "brandName": '科颜氏 Kiehl’s',
-            "productName": '科颜氏高保湿面霜',
-            "productDetail": '高保湿面霜高保湿面霜高保湿面霜...',
-            "auditStatus": '1',
-            "like": '0', 
-            "productTags": ["保湿", "护肤"]
-        },{
-            "userName": 'Guoer',
-            "brandName": '兰蔻 Lancome',
-            "productName": '兰蔻小瓶',
-            "productDetail": '小瓶小瓶小瓶小瓶小瓶...',
-            "auditStatus": '0',
-            "like": '0', 
-            "productTags": ["美白", "护肤"]
-        }];
-        res.json({
-            "status": 1,
-            "statusCode":200,
-            "data": productList
-        });
-        res.end();
     });
 };

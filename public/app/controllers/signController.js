@@ -13,7 +13,7 @@ appControllers.controller("registController",function($scope, $http, postService
 			console.log(res);
             if(typeof res.status != 'undefined'&&res.status == '200'){
                 document.cookie = res.cookie;
-                location.href = baseURL + '/index';
+                location.href = baseURL + '/';
             }else{
                 $scope.errMsg = res.message;
             }
@@ -34,7 +34,7 @@ appControllers.controller("loginController",function($scope, postService, getSer
 			console.log(res);
             if(typeof res.status != 'undefined'&&res.status == '200'){
                 document.cookie = res.cookie;
-                location.href = baseURL + '/index';
+                location.href = baseURL + '/';
             }else{
                 $scope.errMsg = res.message;
             }
